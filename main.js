@@ -6,7 +6,7 @@ var lives = 3;
 var level;
 var interval;
 var frames = 0;
-var gravity = 0.1;
+var gravity = 0.3;
 var position ;
 var speed = gravity + position;
 //var direction = if(ski1.x + ski1.y == 2) {direction = 2};
@@ -25,12 +25,13 @@ class Skier{
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
     moveRight(){
-        this.x += 20;
-        this.y -= 1;
+        this.x += 10;
+        this.y -= 4;
         //if(){}
     }
     moveLeft(){
-        this.x -= 3;
+        this.x -= 10;
+        this.y -= 4;
     }
 }
 
@@ -102,10 +103,13 @@ function resume(){
 
 };
 
-addEventListener('keyright', function(e){
+addEventListener('keydown', function(e){
     if(e.keyCode === 39){
         skiman.moveRight();
     }
-});
+    if(e.keyCode === 37){
+        skiman.moveLeft();
+    }
+})
 
 start();
