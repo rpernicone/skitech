@@ -1,0 +1,56 @@
+
+html, body {
+	/* width: 100%; height: 100%; */
+	box-sizing: border-box;
+}
+body {
+    background-image: url('https://www.crystalski.co.uk/dbimages/asset/Large/v01/143/275.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+canvas {
+	background: whitesmoke;
+	display: block; 
+	margin: 0 auto;
+	/* border: 10px solid brown; */
+	border-top: 10px;
+	border-bottom: 0;
+}
+.container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.btn1{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+#playbtn{
+    width: 90 px;
+    height: 30 px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    color: #767676;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+#pausebtn{
+    width: 90 px;
+    height: 30 px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    color: #767676;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
