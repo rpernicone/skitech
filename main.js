@@ -9,9 +9,11 @@ var interval;
 var frames = 0;
 // var speed;
 var gravity = 0.3;
-var score = 0;
+var score = 10000;
 var snowballs = [];
+var beers = [];
 var treeSpeed = 2;
+var six = []
 // var secs;
 //var position ;
 //var direction;
@@ -114,10 +116,28 @@ class Tree{
     }
 }
 
+class Beer{
+    constructor(posbeer){
+        this.x = posbeer+28;
+        this.y = 500;
+        this.width = 35;
+        this.height = 63;
+        this.image = new Image();
+        this.image.src = './images/corona.png';
+    }
+    draw(){
+        this.y -= 1.2;
+        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    }
+}
+
 // INSTANCE DECLARATION
 var skiman = new Skier();
 var tree = new Tree()
 var snowball = new Snow();
+var beer = new Beer();
+var audio = new Audio();
+    audio.src = './sounds/cant stop.mp3';
 
 // INTERACTION FUNCTIONS ->>
 
@@ -137,6 +157,29 @@ function drawSnowBalls(){
         if(snow.y > +canvas.height){
             snowballs.splice(index,1)
         };
+    })
+}
+
+// GENERATE BEERS
+function generateBeers(){
+    if(!(frames % 600 === 0)) return;
+    let posbeer = (Math.floor(Math.random()*(500)+50));
+    let beer = new Beer(posbeer);
+    beers.push(beer);
+    
+};
+
+//  DRAW THE BEERS GENERATED
+function drawBeers(){
+    beers.forEach((beer, index) =>{
+        beer.draw();
+        if(beer.y < -canvas.height){
+            beers.splice(index,1)
+        };
+        if(skiman.collision(beer)){
+            six
+            // beer.splice(index,)
+        }
     })
 }
 
@@ -165,8 +208,8 @@ function drawTrees(){
 
 //  COUNTS TIME PASSED SKIING WITHOUT COLLISSION = SCORE
 function counter(){
-        if(skiman.y >= 50){
-            score += 1;
+        if(skiman.y >= 55){
+            score -= 1;
         }
 };
 
@@ -177,10 +220,13 @@ function update(){
     skiman.draw();
     generateSnowBalls();
     drawSnowBalls();
+    generateBeers();
+    drawBeers();
     counter();
     generateTrees();
     drawTrees();
-    ctx.fillText(score, 30,30);
+    audio.play();
+    ctx.fillText(score + ' m', 30,30);
     ctx.font = "20px Avenir";
     if(gameover) gameOver()
 };
@@ -188,10 +234,6 @@ function update(){
 // CALLED WHEN BTN CLICKED ON SCREEN
 function start(){
     interval = setInterval(update, 1000/60)
-    let audio = new Audio();
-    audio.src = './sounds/cant stop.mp3';
-    audio.loop = true;
-    audio.play();
 };
 
 //  CALLED WHEN SPACE PRESSED
@@ -204,11 +246,14 @@ function reset(){
     skiman.height= 40;
     skiman.image = new Image();
     skiman.image.src = './images/Skier1.png';
-    score= 0;
+    score= 4810;
     frames = 0;
     interval = undefined;
     trees = [];
+    snowballs= [];
+    beers= [];
     ctx.clearRect(0,0,canvas.width, canvas.height)
+    start();
 }
 
 //  GAMEOVER 
@@ -221,8 +266,8 @@ function gameOver(){
     skiman.height = 70;
     skiman.image.onload = () => {
     skiman.draw();
-    ctx.font = "40px Avenir";
-    ctx.fillText('Score '+score, 250,220);
+    ctx.font = "35px Avenir";
+    ctx.fillText('Altitud '+score, 250,220);
     ctx.font = "40px Avenir"
     ctx.fillText("Game Over", 230, 150);
     ctx.font = "20px Avenir"
