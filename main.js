@@ -8,8 +8,10 @@ var trees = [];
 var interval;
 var frames = 0;
 // var speed;
-var gravity = 0.5;
+var gravity = 0.3;
 var score = 0;
+var snowballs = [];
+var treeSpeed = 2;
 // var secs;
 //var position ;
 //var direction;
@@ -26,12 +28,12 @@ class Skier{
         this.image.src = './images/Skier1.png'
     }
     draw(){
-        if(this.y < canvas.height - 50) this.y += gravity;
+        if(this.y < canvas.height && this.y > 50) this.y -= gravity;
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
     moveRight(){
-        this.x += 12;
-        this.y -= 1;
+        this.x += 16;
+        this.y += 2;
         this.width = 60;
         this.height = 50;
         this.image = new Image();
@@ -42,8 +44,8 @@ class Skier{
         //if(){}
     }
     moveLeft(){
-        this.x -= 12;
-        this.y += 1;
+        this.x -= 16;
+        this.y += 2;
         this.width = 60;
         this.height = 50;
         this.image = new Image();
@@ -57,7 +59,7 @@ class Skier{
         this.image.src = './images/Skier1Left.png'
     }
     speed(){
-        this.y += 3;
+        this.y += 5;
         this.width = 30;
         this.height = 40;
         this.image = new Image();
@@ -81,18 +83,18 @@ class Skier{
 
 
 //  BACKGROUND CLASS
-class Background{
-    constructor(){
-        this.x = 0;
+class Snow{
+    constructor(pos){
+        this.x = pos;
         this.y = 0;
-        this.width = canvas.width;
-        this.height = canvas.height;
+        this.width = 20;
+        this.height = 20;
         this.image = new Image();
-        this.image.src = './images/background.png';
+        this.image.src = './images/snowball.png';
     }
     draw(){
-        this.y--
-        if(this.y < -canvas.width) this.y = 0
+        this.y++
+        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
 }
 
@@ -106,26 +108,42 @@ class Tree{
         this.image = new Image();
         this.image.src = './images/tree.png';
     }
-    //  slowdown(){
-    //      this.y += 5;
-    //  }
     draw(){
-        this.y -= 3;
+        this.y -= 2;
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
 }
 
 // INSTANCE DECLARATION
 var skiman = new Skier();
-var fondo = new Background();
 var tree = new Tree()
+var snowball = new Snow();
 
 // INTERACTION FUNCTIONS ->>
+
+//  GENERATE SNOWBALLS REPEATEADLY 
+function generateSnowBalls(){
+    if(!(frames % 20 === 0)) return;
+    let pos = Math.floor(Math.random()*(canvas.width-50));
+    let snowball = new Snow(pos);
+    snowballs.push(snowball);
+    
+};
+
+//  DRAW THE SNOWBALLS GENERATED
+function drawSnowBalls(){
+    snowballs.forEach((snow, index) =>{
+        snow.draw();
+        if(snow.y > +canvas.height){
+            snowballs.splice(index,1)
+        };
+    })
+}
 
 //  GENERATE TREES REPEATEADLY 
 function generateTrees(){
     if(!(frames % 70 === 0)) return;
-    let pos = Math.floor(Math.random()*(canvas.width-50));
+    let pos = Math.floor(Math.random()*(canvas.width));
     let tree = new Tree(pos);
     trees.push(tree);
     
@@ -134,7 +152,7 @@ function generateTrees(){
 //  DRAW THE TREES GENERATED
 function drawTrees(){
     trees.forEach((tree, index) =>{
-        tree.draw();
+        tree.draw( treeSpeed);
         if(tree.y < -canvas.height){
             trees.splice(index,1)
         };
@@ -144,7 +162,8 @@ function drawTrees(){
     })
 };
 
-//  COUNTS TIME SPENT WITHOUT COLLISSION AND SKIING = SCORE
+
+//  COUNTS TIME PASSED SKIING WITHOUT COLLISSION = SCORE
 function counter(){
         if(skiman.y >= 50){
             score += 1;
@@ -155,8 +174,9 @@ function counter(){
 function update(){
     frames++
     ctx.clearRect(0,0,canvas.width, canvas.height);
-    fondo.draw();
     skiman.draw();
+    generateSnowBalls();
+    drawSnowBalls();
     counter();
     generateTrees();
     drawTrees();
@@ -168,12 +188,13 @@ function update(){
 // CALLED WHEN BTN CLICKED ON SCREEN
 function start(){
     interval = setInterval(update, 1000/60)
+    let audio = new Audio();
+    audio.src = './sounds/cant stop.mp3';
+    audio.loop = true;
+    audio.play();
 };
 
 //  CALLED WHEN SPACE PRESSED
-// function resume(){
-    
-// };
 function reset(){
     if(interval !== undefined) return;
     gameover = false;
@@ -196,6 +217,8 @@ function gameOver(){
     ctx.clearRect(30,30,30,30);
     skiman.image = new Image();
     skiman.image.src = './images/skimangameover.png'
+    skiman.width = 55;
+    skiman.height = 70;
     skiman.image.onload = () => {
     skiman.draw();
     ctx.font = "40px Avenir";
@@ -206,8 +229,7 @@ function gameOver(){
     ctx.fillText("Presiona 'esc' para empezar de nuevo", 170, 180);
     clearInterval(interval);
     interval = undefined;
-    }
-    
+    }  
 }
 
 // EVENTLISTENERS
@@ -215,17 +237,9 @@ function gameOver(){
 addEventListener('keydown', function(e){
     if(e.keyCode === 39){
         skiman.moveRight();
-        // e.preventDefault();
     }
     if(e.keyCode === 37){
         skiman.moveLeft();
-        // e.preventDefault();
-    }
-    // if(e.keyCode === 27){
-    //     resume();
-    // }
-    if(e.keyCode === 38){
-        skiman.brake();
     }
     if(e.keyCode === 40){
         skiman.speed();
@@ -239,4 +253,4 @@ addEventListener('keydown', function(e){
 
 playbtn.addEventListener('click', function(e){
     start();
-});
+})
