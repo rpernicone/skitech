@@ -30,12 +30,13 @@ class Skier{
         this.image.src = './images/Skier1.png'
     }
     draw(){
+        this.y += 0.4;
         if(this.y < canvas.height && this.y > 50) this.y -= gravity;
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
     moveRight(){
         this.x += 16;
-        this.y += 2;
+        this.y += 1;
         this.width = 60;
         this.height = 50;
         this.image = new Image();
@@ -47,7 +48,7 @@ class Skier{
     }
     moveLeft(){
         this.x -= 16;
-        this.y += 2;
+        this.y += 1;
         this.width = 60;
         this.height = 50;
         this.image = new Image();
@@ -115,7 +116,7 @@ class Tree{
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
 }
-
+var that = this;
 class Beer{
     constructor(posbeer){
         this.x = posbeer+28;
@@ -177,8 +178,10 @@ function drawBeers(){
             beers.splice(index,1)
         };
         if(skiman.collision(beer)){
-            six
-            // beer.splice(index,)
+            // skiman.y = skiman.y - 4;
+            score = score - 500;
+            six.push(beer);
+            beers.splice(index,1)
         }
     })
 }
@@ -200,11 +203,30 @@ function drawTrees(){
             trees.splice(index,1)
         };
         if(skiman.collision(tree)){
-            gameover = true;
+            gameOver()
         }
     })
 };
+// COUNTS BEERS AND M
 
+function win(){
+    if(six.length == 6){
+    ctx.clearRect(skiman.x,skiman.y,skiman.width, skiman.height);
+    ctx.clearRect(0,0,550,600);
+    skiman.image = new Image();
+    skiman.image.src = './images/skimangameover.png'
+    skiman.width = 55;
+    skiman.height = 70;
+    skiman.image.onload = () => {
+    ctx.font = "40px Avenir"
+    ctx.fillText("YOU WON", 230, 150);
+    ctx.font = "20px Avenir"
+    ctx.fillText("Presiona 'esc' para empezar de nuevo", 170, 180);
+    clearInterval(interval);
+    interval = undefined;
+    }
+}
+}
 
 //  COUNTS TIME PASSED SKIING WITHOUT COLLISSION = SCORE
 function counter(){
@@ -228,7 +250,8 @@ function update(){
     audio.play();
     ctx.fillText(score + ' m', 30,30);
     ctx.font = "20px Avenir";
-    if(gameover) gameOver()
+    // if(gameover) gameOver()
+    win();
 };
 
 // CALLED WHEN BTN CLICKED ON SCREEN
@@ -246,7 +269,7 @@ function reset(){
     skiman.height= 40;
     skiman.image = new Image();
     skiman.image.src = './images/Skier1.png';
-    score= 4810;
+    score= 10000;
     frames = 0;
     interval = undefined;
     trees = [];
