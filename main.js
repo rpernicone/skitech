@@ -210,11 +210,11 @@ function drawTrees(){
 // COUNTS BEERS AND M
 
 function win(){
-    if(six.length == 6){
+    if(six.length == 3){
     ctx.clearRect(skiman.x,skiman.y,skiman.width, skiman.height);
     ctx.clearRect(0,0,550,600);
     skiman.image = new Image();
-    skiman.image.src = './images/skimangameover.png'
+    skiman.image.src = './images/skierchamp.png'
     skiman.width = 55;
     skiman.height = 70;
     skiman.image.onload = () => {
@@ -262,7 +262,6 @@ function start(){
 //  CALLED WHEN SPACE PRESSED
 function reset(){
     if(interval !== undefined) return;
-    gameover = false;
     skiman.x = 300;
     skiman.y = 50;
     skiman.width = 30;
@@ -275,6 +274,7 @@ function reset(){
     trees = [];
     snowballs= [];
     beers= [];
+    six=[];
     ctx.clearRect(0,0,canvas.width, canvas.height)
     start();
 }
