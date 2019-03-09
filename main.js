@@ -14,6 +14,7 @@ var snowballs = [];
 var beers = [];
 var treeSpeed = 2;
 var six = []
+var lifts = [];
 // var secs;
 //var position ;
 //var direction;
@@ -22,12 +23,12 @@ var six = []
 
 class Skier{
     constructor(){
-        this.x = 300;
-        this.y = 50;
+        this.x = 30;
+        this.y = 500;
         this.width = 30;
         this.height = 40;
         this.image = new Image();
-        this.image.src = './images/Skier1.png'
+        this.image.src = './images/skistart.png'
     }
     draw(){
         this.y += 0.4;
@@ -116,7 +117,8 @@ class Tree{
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
 }
-var that = this;
+
+//  BEER CLASS
 class Beer{
     constructor(posbeer){
         this.x = posbeer+28;
@@ -132,11 +134,30 @@ class Beer{
     }
 }
 
+// LIFT CLASS
+
+class Lift{
+    constructor(){
+        this.x = 30;
+        this.y = 500;
+        this.width = 35;
+        this.height = 63;
+        this.image = new Image();
+        this.image.src = './images/lift.png';
+    }
+    draw(){
+        this.y -= 1.2;
+        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    }
+}
+
+
 // INSTANCE DECLARATION
 var skiman = new Skier();
 var tree = new Tree()
 var snowball = new Snow();
 var beer = new Beer();
+var lift = new Lift();
 var audio = new Audio();
     audio.src = './sounds/cant stop.mp3';
 
@@ -185,12 +206,32 @@ function drawBeers(){
         }
     })
 }
+// GENERATE LIFTS REPEATEADLY 
+function generateLifts(){
+    if(!(frames % 150 === 0)) return;
+    let lift = new Lift();
+    lifts.push(lift);
+    
+};
+
+//  DRAW THE LIFTS GENERATED
+function drawLifts(){
+    lifts.forEach((lift, index) =>{
+        lift.draw();
+        if(lift.y < -canvas.height){
+            lifts.splice(index,1)
+        };
+        if(skiman.collision(lift)){
+            skiman.y = skiman.y - 1.3
+        }
+    })
+};
 
 //  GENERATE TREES REPEATEADLY 
 function generateTrees(){
-    if(!(frames % 70 === 0)) return;
+    if(!(frames % 65 === 0)) return;
     let pos = Math.floor(Math.random()*(canvas.width));
-    let tree = new Tree(pos);
+    let tree = new Tree(pos + 25);
     trees.push(tree);
     
 };
@@ -240,6 +281,8 @@ function update(){
     frames++
     ctx.clearRect(0,0,canvas.width, canvas.height);
     skiman.draw();
+    generateLifts();
+    drawLifts();
     generateSnowBalls();
     drawSnowBalls();
     generateBeers();
