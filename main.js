@@ -9,7 +9,7 @@ var interval;
 var frames = 0;
 // var speed;
 var gravity = 0.3;
-var score = 10000;
+var score = 6000;
 var snowballs = [];
 var beers = [];
 var treeSpeed = 2;
@@ -223,6 +223,7 @@ function drawLifts(){
         };
         if(skiman.collision(lift)){
             skiman.y = skiman.y - 1.3
+            score += 2;
         }
     })
 };
@@ -253,7 +254,7 @@ function drawTrees(){
 function win(){
     if(six.length == 3){
     ctx.clearRect(skiman.x,skiman.y,skiman.width, skiman.height);
-    ctx.clearRect(0,0,550,600);
+    ctx.clearRect(0,0,canvas.width, canvas.height);
     skiman.image = new Image();
     skiman.image.src = './images/skierchamp.png'
     skiman.width = 55;
@@ -311,7 +312,7 @@ function reset(){
     skiman.height= 40;
     skiman.image = new Image();
     skiman.image.src = './images/Skier1.png';
-    score= 10000;
+    score= 6000;
     frames = 0;
     interval = undefined;
     trees = [];
