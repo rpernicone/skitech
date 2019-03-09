@@ -64,6 +64,7 @@ class Skier{
     }
     speed(){
         this.y += 5;
+        score -= 20;
         this.width = 30;
         this.height = 40;
         this.image = new Image();
